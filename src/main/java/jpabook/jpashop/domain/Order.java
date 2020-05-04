@@ -29,7 +29,7 @@ public class Order {
 
     //CascadeType
     //Order를 저장할 때 함께 저장
-    //mappedBy 속성은 양방향 매핑일 때만 사용?
+    //mappedBy 속성은 양방향 매핑일 때만 사용
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 

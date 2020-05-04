@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +27,7 @@ public class Member {
     // 주인은 mappedBy 속성을 사용하지 않음
     // 주인이 아니면 mappedBy 속성을 사용해서 속성의 값으로 연관관계의 주인을 정할 수 있음
     // 양방향의 경우 fk가 있는 곳을 연관관계의 주인으로 설정
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member") //@JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
 }
