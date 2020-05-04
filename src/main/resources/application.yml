@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create  #Application 실행시점에 기존 테이블을 다 지우고 새롭게 생성
+      ddl-auto: none  # create -> Application 실행시점에 기존 테이블을 다 지우고 새롭게 생성
     properties:
       hibernate:
 #        show_sql: true  #logging쪽과 차이점은 show-sql은 systemout으로 출력, logging은 log로
