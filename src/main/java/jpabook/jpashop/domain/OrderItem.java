@@ -24,7 +24,8 @@ public class OrderItem {
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")  //@JsonIgnore
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
 
     private int orderPrice; //주문 가격
