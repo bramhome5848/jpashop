@@ -1,9 +1,9 @@
 package jpabook.jpashop.repository;
 
-import jpabook.jpashop.domain.Member;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderSearch;
-import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,12 +15,22 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jpabook.jpashop.domain.QMember.*;
+import static jpabook.jpashop.domain.QOrder.*;
+
 @Repository
 @RequiredArgsConstructor
 public class OrderRepository {
 
-    @Autowired
     private final EntityManager em;
+
+    private final JPAQueryFactory query;
+
+    @Autowired
+    public OrderRepository(EntityManager em) {
+        this.em = em;
+        this.query = new JPAQueryFactory(em);
+    }
 
     public void save(Order order) {
         em.persist(order);
@@ -33,10 +43,34 @@ public class OrderRepository {
     //동적쿼리 생성시 jpql은 쿼리를 만들기 위해 문자를 자르고 붙이고 수행 -> 권장X
     //jpa criteria -> StringBuilder를 통해서 쿼리를 조힙하는 것과 유사 -> 권장X
     //컴파일 타임에 동적 쿼리를 잘 해결할 수 있을까 -> QueryDsl library
-//    public List<Order> findAll(OrderSearch orderSearch) {
-//
-//
-//    }
+    public List<Order> findAll(OrderSearch orderSearch) {
+
+        QOrder order = QOrder.order;
+        QMember member = QMember.member;
+        return query
+                .select(order)
+                .from(order)
+                .join(order.member, member)
+                .where(statusEq(orderSearch.getOrderStatus()),
+                        nameLike(orderSearch.getMemberName()))
+                .limit(1000)
+                .fetch();
+    }
+
+    private BooleanExpression statusEq(OrderStatus statusCond) {
+        if(statusCond == null) {
+            return null;
+        }
+        return order.status.eq(statusCond);
+    }
+
+    private BooleanExpression nameLike(String nameCond) {
+        if (!StringUtils.hasText(nameCond)) {
+            return null;
+        }
+        return member.name.like(nameCond);
+    }
+
 
     //JPQL로 처리
     public List<Order> findAllByString(OrderSearch orderSearch) {
