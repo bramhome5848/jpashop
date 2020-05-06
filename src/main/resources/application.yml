@@ -12,6 +12,7 @@ spring:
 #        show_sql: true  #logging쪽과 차이점은 show-sql은 systemout으로 출력, logging은 log로
         format_sql: true
         default_batch_fetch_size: 100
+    open-in-view: true  #OSIV Open Session In View default : true
 
 
 logging.level:

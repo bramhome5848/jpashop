@@ -124,6 +124,7 @@ public class OrderRepository {
     }
 
     //fetch join
+    //distinct로 쿼리 적용 && 어플리케이션 내에서 중복 제거
     public List<Order> findAllWithItem() {
         return em.createQuery(
             "select distinct o from Order o" +
@@ -131,8 +132,8 @@ public class OrderRepository {
                     "  join fetch o.delivery d" +
                     "  join fetch o.orderItems oi" +
                     "  join fetch oi.item i", Order.class)
-                .setFirstResult(1)
-                .setMaxResults(100)
+                //.setFirstResult(1)
+                //.setMaxResults(100)
                 .getResultList();
     }
 }
